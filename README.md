@@ -19,4 +19,4 @@
 
 
 # Preview
-![Video](https://youtu.be/FVdf451_uqE)
+https://youtu.be/FVdf451_uqE
