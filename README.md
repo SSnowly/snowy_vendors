@@ -11,11 +11,12 @@
 1. Go into the `snowy_vendors` folder
 2. Go into the `config/shared.lua` file
 3. Add your vendors as this (insdie the beds table):
-image placeholder
+![image](https://github.com/user-attachments/assets/4b3b9261-4860-4152-983f-08e349597316)
+
 4. Save the file
 5. Restart the script
 6. Its done!
 
 
 # Preview
-https://youtu.be/FVdf451_uqE
+![Video](https://youtu.be/FVdf451_uqE)
