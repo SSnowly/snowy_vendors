@@ -52,6 +52,10 @@ CreateThread(function()
     RegisterVendors()
 end)
 
+lib.callback.register('snowy_vendors:getCurrentInGameTime', function()
+    return GetClockHours()
+end)
+
 AddEventHandler('onResourceStop', function(resourceName)
     if resourceName == GetCurrentResourceName() then
         RemoveVendors()

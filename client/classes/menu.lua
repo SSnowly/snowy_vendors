@@ -15,7 +15,13 @@ end
 
 function VendorMenu:openShop()
     if self.vendorConfig.hours.enabled then
-        local currentHour = lib.callback.await('snowy_vendors:getCurrentTime', false)
+        local currentHour
+        if self.vendorConfig.hours.realTime then
+            currentHour = lib.callback.await('snowy_vendors:getCurrentTime', false)
+        else
+            currentHour = GetClockHours()
+        end
+    
         if currentHour < self.vendorConfig.hours.open or currentHour >= self.vendorConfig.hours.close then
             lib.notify({
                 title = 'Vendor',

@@ -34,7 +34,13 @@ lib.callback.register('snowy_vendors:buyItem', function(source, vendorId, itemNa
     if not vendor or not inventory then return false, "Invalid vendor" end
 
     if vendor.hours.enabled then
-        local currentHour = os.date("*t").hour
+        local currentHour
+        if vendor.hours.realTime then
+            currentHour = os.date("*t").hour
+        else
+            currentHour = lib.callback.await('snowy_vendors:getCurrentInGameTime', source)
+        end
+
         if currentHour < vendor.hours.open or currentHour >= vendor.hours.close then
             return false, "This vendor is currently closed"
         end
@@ -74,7 +80,13 @@ lib.callback.register('snowy_vendors:sellItem', function(source, vendorId, itemN
     if not vendor or not inventory then return false, "Invalid vendor" end
 
     if vendor.hours.enabled then
-        local currentHour = os.date("*t").hour
+        local currentHour
+        if vendor.hours.realTime then
+            currentHour = os.date("*t").hour
+        else
+            currentHour = lib.callback.await('snowy_vendors:getCurrentInGameTime', source)
+        end
+        
         if currentHour < vendor.hours.open or currentHour >= vendor.hours.close then
             return false, "This vendor is currently closed"
         end
