@@ -108,7 +108,7 @@ function VendorMenu:getItemOptions()
                 local price = itemData.price
                 local currentStock = stock.stock
 
-                local buyPrice = price * (config.Vendors[self.vendorId].jobs.jobs[QBX.PlayerData.job.name]?.writeUp or config.Vendors[self.vendorId].jobs.noJobPercentage ) / 100
+                local buyPrice = math.floor(price * (config.Vendors[self.vendorId].jobs.jobs[QBX.PlayerData.job.name]?.writeUp or config.Vendors[self.vendorId].jobs.noJobPercentage ) / 100)
 
                 local description = ('Price: $%d'):format(buyPrice)
                 if stock.dynamic then
@@ -149,7 +149,7 @@ function VendorMenu:showItemMenu(itemName, itemData)
             title = 'Buy',
             icon = 'fas fa-shopping-cart',
             disabled = itemData.stock <= 0,
-            description = ('Price: $%d'):format(itemData.price) .. (itemData.stock <= 0 and '\nOut of Stock' or ''),
+            description = ('Price: $%d'):format(math.floor(itemData.price)) .. (itemData.stock <= 0 and '\nOut of Stock' or ''),
             onSelect = function()
                 local input = lib.inputDialog('Buy Item', {
                     { type = 'number', label = 'Amount', default = 1, min = 1, max = itemData.dynamic and itemData.stock or 100 }
