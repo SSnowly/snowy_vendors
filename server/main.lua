@@ -18,7 +18,7 @@ lib.callback.register('snowy_vendors:getVendorStock', function(source, vendorId)
     for itemName, itemData in pairs(vendors[vendorId].shop.items) do
         stockData[itemName] = {
             stock = inventory:getStock(itemName),
-            price = inventory:getDynamicPrice(source, itemName),
+            price = inventory:getDynamicPrice(source, itemName) or itemData.price,
             dynamic = itemData.dynamic or false
         }
     end
@@ -44,7 +44,7 @@ lib.callback.register('snowy_vendors:buyItem', function(source, vendorId, itemNa
         return false, "Not enough stock"
     end
 
-    local price = inventory:getDynamicPrice(source, itemName)
+    local price = inventory:getDynamicPrice(source, itemName) or vendor.shop.items[itemName].price
     if not price then return false, "Invalid item" end
 
     local totalPrice = price * amount
@@ -88,7 +88,7 @@ lib.callback.register('snowy_vendors:sellItem', function(source, vendorId, itemN
         return false, "You don't have enough items"
     end
 
-    local basePrice = inventory:getDynamicPrice(source, itemName)
+    local basePrice = inventory:getDynamicPrice(source, itemName) or vendor.shop.items[itemName].price
     local sellPrice = math.floor(basePrice * 0.7)
     local totalPrice = sellPrice * amount
 
