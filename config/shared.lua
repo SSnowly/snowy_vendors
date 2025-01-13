@@ -15,6 +15,7 @@ return {
             },
             hours = {
                 enabled = false,
+                realTime = true, -- If true, the time will use real-life time based on the user's location. If false, the time will use in-game time.
                 open = 2,  -- Opening hour (24-hour format)
                 close = 8, -- Closing hour (24-hour format)
             },
