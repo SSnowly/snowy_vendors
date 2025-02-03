@@ -15,7 +15,19 @@ function VendorInventory.new(vendorId)
 end
 
 function VendorInventory:load()
-    if not config.Vendors[self.vendorId].shop.persistInventory then return end
+    if not config.Vendors[self.vendorId].shop.persistInventory then
+        -- Initialize with default shop items
+        for itemName, itemData in pairs(config.Vendors[self.vendorId].shop.items) do
+            self.items[itemName] = {
+                amount = itemData.amount or 0,
+                basePrice = itemData.price,
+                soldItems = {},
+                dynamic = itemData.dynamic or false
+            }
+        end
+        self:save() -- Save initial data
+        return
+    end
     
     -- Load from database or JSON file
     local savedData = json.decode(LoadResourceFile(GetCurrentResourceName(), ('data/%s.json'):format(self.vendorId)))
