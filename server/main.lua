@@ -26,7 +26,7 @@ lib.callback.register('snowy_vendors:getVendorStock', function(source, vendorId)
     return stockData
 end)
 
-lib.callback.register('snowy_vendors:buyItem', function(source, vendorId, itemName, amount)
+lib.callback.register('snowy_vendors:buyItem', function(source, vendorId, itemName, amount, metadata)
     vendorInventories[vendorId]:load()
 
     local vendor = vendors[vendorId]
@@ -60,7 +60,7 @@ lib.callback.register('snowy_vendors:buyItem', function(source, vendorId, itemNa
     end
 
     if exports.ox_inventory:RemoveItem(source, 'money', totalPrice) then
-        if exports.ox_inventory:AddItem(source, itemName, amount) then
+        if exports.ox_inventory:AddItem(source, itemName, amount, metadata) then
             inventory:removeItem(itemName, amount)
             return true
         else
@@ -101,7 +101,7 @@ lib.callback.register('snowy_vendors:sellItem', function(source, vendorId, itemN
     end
 
     local basePrice = inventory:getDynamicPrice(source, itemName) or vendor.shop.items[itemName].price
-    local sellPrice = math.floor(basePrice * 0.7)
+    local sellPrice = math.floor(basePrice * (vendor.shop.items[itemName].percentage or 1))
     local totalPrice = sellPrice * amount
 
     if exports.ox_inventory:RemoveItem(source, itemName, amount) then

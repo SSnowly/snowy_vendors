@@ -106,6 +106,8 @@ function VendorMenu:getItemOptions()
             local stock = stockData[itemName]
             if stock then
                 local price = itemData.price
+                local percentage = itemData.percentage or 1
+                local iteminfo = itemData.metadata or {}
                 local currentStock = stock.stock
 
                 local buyPrice = math.floor(price * (config.Vendors[self.vendorId].jobs.jobs[QBX.PlayerData.job.name]?.writeUp or config.Vendors[self.vendorId].jobs.noJobPercentage ) / 100)
@@ -118,15 +120,27 @@ function VendorMenu:getItemOptions()
                     end
                 end
 
+                if metadata.client then
+                    if metadata.client.image then
+                        imageName = metadata.client.image
+                    elseif metadata.client.imageurl then
+                        imageName = metadata.client.imageurl
+                    end
+                else
+                    imageName = 'nui://ox_inventory/web/images/' .. itemName .. '.png'
+                end
+
                 options[#options+1] = {
                     title = metadata.label,
                     description = description,
-                    icon = 'nui://ox_inventory/web/images/' .. itemName .. '.png',
+                    icon = imageName,
                     onSelect = function()
                         self:showItemMenu(itemName, {
                             price = buyPrice,
                             stock = currentStock,
-                            dynamic = stock.dynamic
+                            dynamic = stock.dynamic,
+                            percentage = percentage,
+                            metadata = iteminfo,
                         })
                     end
                 }
@@ -156,7 +170,7 @@ function VendorMenu:showItemMenu(itemName, itemData)
                 })
 
                 if input then
-                    local success, result = lib.callback.await('snowy_vendors:buyItem', false, self.vendorId, itemName, input[1])
+                    local success, result = lib.callback.await('snowy_vendors:buyItem', false, self.vendorId, itemName, input[1], itemData.metadata)
                     lib.notify({
                         title = success and 'Success' or 'Error',
                         description = result or (success and 'Purchase successful' or 'Purchase failed'),
@@ -177,7 +191,7 @@ function VendorMenu:showItemMenu(itemName, itemData)
             title = 'Sell',
             icon = 'fas fa-dollar-sign',
             disabled = not canSell,
-            description = canSell and ('Price: $%d / each'):format(itemData.price * 0.7) or 'You cannot sell to this vendor at this time',
+            description = canSell and ('Price: $%d / each'):format(itemData.price * (itemData.percentage or 1)) or 'You cannot sell to this vendor at this time',
             onSelect = function()
                 local amount = lib.callback.await('snowy_vendors:getPlayerItem', false, itemName)
                 if amount <= 0 then
