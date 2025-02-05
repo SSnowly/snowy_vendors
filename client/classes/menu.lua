@@ -118,15 +118,27 @@ function VendorMenu:getItemOptions()
                     end
                 end
 
+                if metadata.client then
+                    if metadata.client.image then
+                        imageName = metadata.client.image
+                    elseif metadata.client.imageurl then
+                        imageName = metadata.client.imageurl
+                    end
+                else
+                    imageName = 'nui://ox_inventory/web/images/' .. itemName .. '.png'
+                end
+
                 options[#options+1] = {
                     title = metadata.label,
                     description = description,
-                    icon = 'nui://ox_inventory/web/images/' .. itemName .. '.png',
+                    icon = imageName,
                     onSelect = function()
                         self:showItemMenu(itemName, {
                             price = buyPrice,
                             stock = currentStock,
-                            dynamic = stock.dynamic
+                            dynamic = stock.dynamic,
+                            percentaje = percentaje,
+                            metadata = iteminfo,
                         })
                     end
                 }
