@@ -107,6 +107,7 @@ function VendorMenu:getItemOptions()
             if stock then
                 local price = itemData.price
                 local percentage = itemData.percentage or 1
+                local iteminfo = itemData.metadata or {}
                 local currentStock = stock.stock
 
                 local buyPrice = math.floor(price * (config.Vendors[self.vendorId].jobs.jobs[QBX.PlayerData.job.name]?.writeUp or config.Vendors[self.vendorId].jobs.noJobPercentage ) / 100)
@@ -169,7 +170,7 @@ function VendorMenu:showItemMenu(itemName, itemData)
                 })
 
                 if input then
-                    local success, result = lib.callback.await('snowy_vendors:buyItem', false, self.vendorId, itemName, input[1])
+                    local success, result = lib.callback.await('snowy_vendors:buyItem', false, self.vendorId, itemName, input[1], itemData.metadata)
                     lib.notify({
                         title = success and 'Success' or 'Error',
                         description = result or (success and 'Purchase successful' or 'Purchase failed'),
