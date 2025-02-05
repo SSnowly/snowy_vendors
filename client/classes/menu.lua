@@ -106,6 +106,7 @@ function VendorMenu:getItemOptions()
             local stock = stockData[itemName]
             if stock then
                 local price = itemData.price
+                local percentage = itemData.percentage or 1
                 local currentStock = stock.stock
 
                 local buyPrice = math.floor(price * (config.Vendors[self.vendorId].jobs.jobs[QBX.PlayerData.job.name]?.writeUp or config.Vendors[self.vendorId].jobs.noJobPercentage ) / 100)
@@ -137,7 +138,7 @@ function VendorMenu:getItemOptions()
                             price = buyPrice,
                             stock = currentStock,
                             dynamic = stock.dynamic,
-                            percentaje = percentaje,
+                            percentage = percentage,
                             metadata = iteminfo,
                         })
                     end
@@ -189,7 +190,7 @@ function VendorMenu:showItemMenu(itemName, itemData)
             title = 'Sell',
             icon = 'fas fa-dollar-sign',
             disabled = not canSell,
-            description = canSell and ('Price: $%d / each'):format(itemData.price * 0.7) or 'You cannot sell to this vendor at this time',
+            description = canSell and ('Price: $%d / each'):format(itemData.price * (itemData.percentage or 1)) or 'You cannot sell to this vendor at this time',
             onSelect = function()
                 local amount = lib.callback.await('snowy_vendors:getPlayerItem', false, itemName)
                 if amount <= 0 then

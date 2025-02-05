@@ -101,7 +101,7 @@ lib.callback.register('snowy_vendors:sellItem', function(source, vendorId, itemN
     end
 
     local basePrice = inventory:getDynamicPrice(source, itemName) or vendor.shop.items[itemName].price
-    local sellPrice = math.floor(basePrice * 0.7)
+    local sellPrice = math.floor(basePrice * (vendor.shop.items[itemName].percentage or 1))
     local totalPrice = sellPrice * amount
 
     if exports.ox_inventory:RemoveItem(source, itemName, amount) then
