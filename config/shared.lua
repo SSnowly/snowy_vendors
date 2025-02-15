@@ -40,6 +40,8 @@ return {
                         price = 200,
                         amount = 100,
                         dynamic = true, -- Price fluctuates based on supply/demand
+                        percentage = 1, -- Percentage of the base price to sell the item 1 is 100% (optional)
+                        metadata = { type = 'Water' } -- Custom metadata for the item when bought (optional)
                     },
                 }
             }
